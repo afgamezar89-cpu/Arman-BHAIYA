@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ARMAN BOMBER PREMIUM SYSTEM</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1e1b4b, #312e81, #5a4bff);
+            background-size: 400% 400%;
+            animation: gradientBG 10s ease infinite;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #333;
+            padding: 10px;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 400px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            overflow: hidden;
+            position: relative;
+            min-height: 700px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: #fff;
+            border-bottom: 2px solid #f0f0ff;
+        }
+
+        .logo {
+            font-size: 16px;
+            font-weight: 800;
+            background: linear-gradient(45deg, #ff007f, #5a4bff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .logo-icon { font-size: 20px; -webkit-text-fill-color: initial; }
+
+        /* Header Redeem Button */
+        .btn-header-redeem {
+            background: linear-gradient(45deg, #f1c40f, #f39c12);
+            color: #000;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 800;
+            cursor: pointer;
+            margin-left: 10px;
+            box-shadow: 0 3px 10px rgba(243, 156, 18, 0.4);
+            white-space: nowrap;
+        }
+
+        .owner-tag {
+            font-size: 9px; font-weight: 700; color: #ff007f;
+            background: rgba(255, 0, 127, 0.1); padding: 4px 6px;
+            border-radius: 6px; border: 1px solid rgba(255, 0, 127, 0.3);
+            margin-left: auto; margin-right: 10px;
+            white-space: nowrap;
+        }
+
+        .header-controls { display: flex; gap: 10px; align-items: center; }
+
+        .toggle-switch {
+            width: 40px; height: 22px;
+            background: linear-gradient(90deg, #5a4bff, #ff007f);
+            border-radius: 15px; position: relative; cursor: pointer;
+        }
+
+        .toggle-switch::after {
+            content: ''; position: absolute; width: 16px; height: 16px;
+            background: #fff; border-radius: 50%; top: 3px; left: 4px; transition: 0.3s;
+        }
+
+        .hamburger { font-size: 20px; color: #5a4bff; cursor: pointer; }
+
+        /* Screens */
+        .screen {
+            display: none; padding: 20px; flex: 1;
+            flex-direction: column; align-items: center;
+        }
+
+        .screen.active { display: flex; animation: fadeIn 0.4s ease-in-out; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Screen 1: Home */
+        .credit-display {
+            width: 100%; background: linear-gradient(45deg, #1e1b4b, #312e81);
+            color: white; padding: 15px; border-radius: 12px;
+            display: flex; justify-content: space-between; align-items: center;
+            font-weight: 700; margin-bottom: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            border: 1px solid #5a4bff;
+        }
+
+        .credit-display span { font-size: 22px; color: #00e676; text-shadow: 0 0 10px rgba(0, 230, 118, 0.5); }
+
+        /* Redeem Section */
+        .redeem-section {
+            width: 100%;
+            background: #fff;
+            padding: 15px;
+            border-radius: 16px;
+            border: 2px solid #5a4bff;
+            box-shadow: 0 5px 15px rgba(90, 75, 255, 0.1);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .redeem-section p {
+            font-size: 13px;
+            font-weight: 800;
+            color: #5a4bff;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .redeem-box { width: 100%; display: flex; gap: 8px; }
+
+        .redeem-box input {
+            flex: 1; padding: 10px; border: 2px solid #e0e0ff;
+            border-radius: 10px; outline: none; font-weight: 600; font-size: 14px;
+        }
+
+        .redeem-box input:focus { border-color: #ff007f; }
+
+        .btn-redeem {
+            background: linear-gradient(45deg, #ff007f, #ff5252);
+            color: white; border: none; padding: 0 15px;
+            border-radius: 10px; font-weight: 700; cursor: pointer;
+            box-shadow: 0 5px 15px rgba(255, 0, 127, 0.3);
+            white-space: nowrap;
+        }
+
+        .icon-circle {
+            width: 80px; height: 80px;
+            background: linear-gradient(135deg, #ff007f, #5a4bff);
+            border-radius: 50%; display: flex; justify-content: center; align-items: center;
+            color: white; font-size: 35px; margin: 10px 0 20px 0;
+            box-shadow: 0 10px 25px rgba(255, 0, 127, 0.4);
+        }
+
+        .instruction { text-align: center; font-size: 14px; color: #666; margin-bottom: 25px; font-weight: 500; }
+
+        .input-group {
+            width: 100%; display: flex; border: 2px solid #e0e0ff;
+            border-radius: 14px; overflow: hidden; margin-bottom: 10px;
+            background: #fff; transition: 0.3s;
+        }
+
+        .input-group:focus-within { border-color: #5a4bff; box-shadow: 0 0 10px rgba(90, 75, 255, 0.2); }
+
+        .country-code { background: #f8f9ff; padding: 15px; font-weight: 700; border-right: 2px solid #e0e0ff; color: #5a4bff; }
+
+        .input-group input { flex: 1; border: none; padding: 15px; font-size: 16px; outline: none; font-weight: 600; color: #333; }
+
+        .info-text { width: 100%; display: flex; justify-content: space-between; font-size: 12px; color: #888; margin-bottom: 30px; font-weight: 500; }
+
+        .btn-primary {
+            width: 100%; padding: 16px; background: linear-gradient(45deg, #5a4bff, #ff007f);
+            color: white; border: none; border-radius: 14px; font-size: 16px;
+            font-weight: 700; cursor: pointer; transition: 0.3s;
+            box-shadow: 0 8px 20px rgba(90, 75, 255, 0.4);
+        }
+
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(90, 75, 255, 0.6); }
+
+        /* Screen 2: Loading */
+        .loading-title { font-size: 22px; font-weight: 800; margin-top: 20px; color: #1a1a3a; }
+        .loading-subtitle { font-size: 14px; color: #777; margin-bottom: 30px; font-weight: 500; }
+
+        .timer-circle {
+            width: 160px; height: 160px; border-radius: 50%;
+            border: 6px solid #f0f0ff; border-top: 6px solid #ff007f;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            animation: spin 1s linear infinite; box-shadow: 0 0 25px rgba(255, 0, 127, 0.4);
+        }
+
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        .timer-number {
+            font-size: 55px; font-weight: 800;
+            background: linear-gradient(45deg, #5a4bff, #ff007f);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            animation: spin-reverse 1s linear infinite;
+        }
+
+        @keyframes spin-reverse { 0% { transform: rotate(0deg); } 100% { transform: rotate(-360deg); } }
+
+        .timer-text { font-size: 12px; color: #888; margin-top: -5px; font-weight: 700; animation: spin-reverse 1s linear infinite; }
+
+        /* Screen 3: Dashboard */
+        #dashboard { background: linear-gradient(to right, #24243e, #302b63, #0f0c29); color: white; padding: 20px; border-radius: 0 0 24px 24px; }
+
+        .dashboard-header {
+            width: 100%; display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 20px; background: rgba(255,255,255,0.1); padding: 12px;
+            border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .active-badge { background: #00e676; color: #000; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 800; display: flex; align-items: center; gap: 5px; box-shadow: 0 0 10px #00e676; }
+        .target-number { font-size: 14px; color: #a5b4fc; font-weight: 600; }
+
+        .main-status-card { width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 35px 20px; text-align: center; margin-bottom: 20px; }
+        .status-icon { font-size: 40px; background: linear-gradient(135deg, #ff007f, #5a4bff); width: 90px; height: 90px; border-radius: 25px; display: flex; justify-content: center; align-items: center; margin: 0 auto 20px auto; box-shadow: 0 10px 20px rgba(255, 0, 127, 0.3); }
+
+        .stats-grid { display: flex; gap: 15px; width: 100%; margin-bottom: 25px; }
+        .stat-box { flex: 1; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 20px; text-align: center; }
+        .stat-icon { font-size: 24px; margin-bottom: 10px; }
+        .stat-label { font-size: 10px; color: #a5b4fc; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; font-weight: 700; }
+        .stat-value { font-size: 22px; font-weight: 800; }
+
+        .controls { width: 100%; display: flex; flex-direction: column; gap: 12px; }
+        .btn-pause { background: linear-gradient(90deg, #5a4bff, #7b6cff); color: white; border: none; padding: 15px; border-radius: 14px; font-size: 16px; font-weight: 700; cursor: pointer; box-shadow: 0 5px 15px rgba(90, 75, 255, 0.3); }
+        
+        .btn-new-num { 
+            background: linear-gradient(90deg, #f39c12, #f1c40f); 
+            color: #000; border: none; padding: 15px; border-radius: 14px; 
+            font-size: 16px; font-weight: 800; cursor: pointer; 
+            box-shadow: 0 5px 15px rgba(243, 156, 18, 0.4); transition: 0.3s;
+        }
+        .btn-new-num:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(243, 156, 18, 0.6); }
+
+        .btn-again { background: linear-gradient(90deg, #00b09b, #96c93d); color: white; border: none; padding: 15px; border-radius: 14px; font-size: 16px; font-weight: 800; cursor: pointer; box-shadow: 0 5px 15px rgba(0, 176, 155, 0.4); transition: 0.3s; }
+        .btn-stop { background: linear-gradient(90deg, #ff007f, #ff5252); color: white; border: none; padding: 15px; border-radius: 14px; font-size: 16px; font-weight: 700; cursor: pointer; box-shadow: 0 5px 15px rgba(255, 0, 127, 0.3); transition: 0.3s; }
+
+        /* Modals */
+        .sub-modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(5px);
+            display: flex; justify-content: center; align-items: center;
+            z-index: 9999; padding: 20px;
+        }
+
+        .sub-modal-content {
+            background: #fff; padding: 25px 20px; border-radius: 24px;
+            width: 100%; max-width: 350px; text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            max-height: 90vh; overflow-y: auto;
+        }
+
+        @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+        .sub-modal-content h2 { color: #ff007f; margin-bottom: 10px; font-size: 24px; font-weight: 800; }
+        .sub-modal-content p { color: #555; font-size: 14px; margin-bottom: 20px; font-weight: 500; }
+
+        .btn-join { display: block; width: 100%; background: linear-gradient(45deg, #0088cc, #00aced); color: white; text-decoration: none; padding: 16px; border-radius: 14px; font-weight: 700; margin-bottom: 15px; font-size: 16px; box-shadow: 0 5px 15px rgba(0, 136, 204, 0.4); transition: 0.3s; }
+        
+        .btn-verify { 
+            background: #f4f6f9; color: #333; border: 2px solid #5a4bff; 
+            width: 100%; padding: 16px; border-radius: 14px; font-weight: 700; 
+            cursor: pointer; font-size: 16px; transition: 0.3s; 
+        }
+        
+        .btn-verify:disabled {
+            background: #e0e0e0; border-color: #ccc; color: #888;
+            cursor: not-allowed; box-shadow: none;
+        }
+        
+        .verification-msg {
+            font-size: 13px; color: #ff007f; font-weight: 700;
+            margin-bottom: 10px; display: none;
+        }
+
+        .hidden { display: none !important; }
+
+        /* --- ADMIN PANEL CSS --- */
+        #adminModal .sub-modal-content { text-align: left; max-width: 380px; }
+        #adminModal h2 { color: #5a4bff; text-align: center; margin-bottom: 15px;}
+        
+        .admin-section { background: #f8f9ff; padding: 15px; border-radius: 12px; margin-bottom: 15px; border: 1px solid #e0e0ff; }
+        .admin-section h3 { font-size: 14px; color: #333; margin-bottom: 10px; }
+        
+        #adminLogin input, .admin-section input { width: 100%; padding: 12px; margin-bottom: 10px; border: 2px solid #e0e0ff; border-radius: 10px; font-size: 14px; outline: none; font-weight: 600; }
+        #adminLogin input:focus, .admin-section input:focus { border-color: #5a4bff; }
+        
+        .admin-btn { width: 100%; padding: 12px; background: #5a4bff; color: white; border: none; border-radius: 10px; font-weight: 700; cursor: pointer; }
+        
+        .toggle-container { display: flex; justify-content: space-between; align-items: center; font-weight: 600; font-size: 14px; }
+        .switch { position: relative; display: inline-block; width: 46px; height: 24px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 24px; }
+        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: #ff007f; }
+        input:checked + .slider:before { transform: translateX(22px); }
+
+        #targetList, #adminCodeList { list-style-type: none; max-height: 150px; overflow-y: auto; padding: 0; margin-bottom: 10px; background: #fff; border-radius: 8px; border: 1px solid #e0e0ff; }
+        #targetList li, #adminCodeList li { padding: 10px; border-bottom: 1px solid #e0e0ff; font-size: 12px; display: flex; justify-content: space-between; align-items: center; font-weight: 500; }
+    </style>
+</head>
+<body>
+
+<!-- Maintenance Overlay -->
+<div id="maintenanceScreen" class="sub-modal hidden" style="z-index: 10000; background: #0f0c29;">
+    <div style="text-align: center; color: white;">
+        <h1 style="font-size: 40px; margin-bottom: 10px;">🚧</h1>
+        <h2 style="font-size: 24px; font-weight: 800; color: #ff007f;">Under Maintenance</h2>
+        <p style="color: #a5b4fc; margin-top: 10px; font-weight: 500;">Our website is currently under maintenance.<br>Please try again later.</p>
+    </div>
+</div>
+
+<!-- Subscription Gate Popup (Channel Join) -->
+<div id="subscriptionModal" class="sub-modal hidden">
+    <div class="sub-modal-content">
+        <h2>⚠️ Attention</h2>
+        <p>To use this premium tool, you must join our channel.</p>
+        
+        <a href="https://t.me/ARMAN_BOMBER" target="_blank" class="btn-join" id="joinChannelLink">
+            📢 Join Telegram Channel
+        </a>
+        
+        <p class="verification-msg" id="verifyStatus">
+            Verifying... Please wait <span id="verifyCountdown">5</span>s
+        </p>
+        
+        <button id="verifyBtn" class="btn-verify" disabled>
+            🔒 Join Channel to Unlock
+        </button>
+    </div>
+</div>
+
+<!-- HEADER REDEEM MODAL -->
+<div id="headerRedeemModal" class="sub-modal hidden">
+    <div class="sub-modal-content" style="border: 2px solid #5a4bff;">
+        <h2 style="color: #5a4bff;">🎁 Redeem Credits 🎁</h2>
+        <p>Enter your redeem code below to get credits.</p>
+        
+        <div class="redeem-box" style="margin-bottom: 15px;">
+            <input type="text" id="headerRedeemInput" placeholder="Enter Code">
+            <button id="headerRedeemBtn" class="btn-redeem">Redeem</button>
+        </div>
+        
+        <button id="closeHeaderRedeemBtn" class="btn-verify">Close</button>
+    </div>
+</div>
+
+<!-- NO CREDIT MODAL -->
+<div id="noCreditModal" class="sub-modal hidden">
+    <div class="sub-modal-content" style="border: 2px solid #ff007f;">
+        <h2 style="font-size: 28px;">❌ No Credits!</h2>
+        <p style="font-size: 14px;">You do not have enough credits.<br>You need <b>200 Credits</b> to launch a bomb.</p>
+        
+        <p style="font-size: 12px; color: #00b09b; font-weight: 700; margin-bottom: 10px;">Enter your code below to claim credits</p>
+        
+        <div class="redeem-box" style="margin-bottom: 15px;">
+            <input type="text" id="popupRedeemInput" placeholder="Enter Code">
+            <button id="popupRedeemBtn" class="btn-redeem">Redeem</button>
+        </div>
+        
+        <button id="closeNoCreditBtn" class="btn-verify" style="border-color:#ff007f; color:#ff007f;">Close</button>
+    </div>
+</div>
+
+<!-- CONTACT OWNER MODAL -->
+<div id="contactOwnerModal" class="sub-modal hidden">
+    <div class="sub-modal-content" style="border: 2px solid #ff007f;">
+        <h2 style="font-size: 26px;">❌ Redeem Failed</h2>
+        <p id="redeemErrorMsg" style="font-size: 14px; font-weight: 700; color: #d63031;">The code is invalid or has expired.</p>
+        
+        <p style="font-size: 13px; color: #555; margin-bottom: 20px;">Please enter a valid code or contact the owner for a new code.</p>
+        
+        <a href="https://t.me/ARMAN_BOMBER" target="_blank" class="btn-join">
+            📢 Contact Owner / Join Channel
+        </a>
+        
+        <button id="closeContactOwnerBtn" class="btn-verify">Close</button>
+    </div>
+</div>
+
+<!-- ADMIN PANEL MODAL -->
+<div id="adminModal" class="sub-modal hidden">
+    <div class="sub-modal-content">
+        <h2>🔐 Admin Panel</h2>
+        
+        <div id="adminLogin">
+            <p style="text-align:center; font-size:13px; color:#777; margin-bottom:15px; font-weight:600;">Only for Owner</p>
+            <input type="password" id="adminPass" placeholder="Enter Admin Password">
+            <button id="adminLoginBtn" class="admin-btn" style="margin-bottom:10px;">Login</button>
+            <button id="closeAdminBtn1" class="btn-verify">Cancel</button>
+        </div>
+
+        <div id="adminData" class="hidden">
+            <div class="admin-section">
+                <h3>⚙️ System Settings</h3>
+                <div class="toggle-container">
+                    <span>Maintenance Mode</span>
+                    <label class="switch">
+                        <input type="checkbox" id="maintenanceToggle">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="admin-section">
+                <h3>🎁 Generate Redeem Code</h3>
+                <input type="text" id="newCodeStr" placeholder="Code (e.g. ARMAN500)">
+                <input type="number" id="newCodeCredits" placeholder="Credits (e.g. 500)">
+                <input type="number" id="newCodeMaxUses" placeholder="Max Users (e.g. 5)">
+                <button id="generateCodeBtn" class="admin-btn">Generate Code</button>
+                
+                <h3 style="margin-top:15px;">📋 Active Codes</h3>
+                <ul id="adminCodeList"></ul>
+            </div>
+
+            <div class="admin-section">
+                <h3>🎯 Recent Targets</h3>
+                <ul id="targetList"></ul>
+                <button id="clearDataBtn" class="btn-stop" style="padding:10px; width:100%; margin-bottom:10px;">🗑️ Clear Targets</button>
+            </div>
+            
+            <button id="closeAdminBtn2" class="btn-verify">Close Panel</button>
+        </div>
+    </div>
+</div>
+
+<div class="app-container">
+    <!-- Header -->
+    <header>
+        <div class="logo" id="secretLogoTrigger">
+            <span class="logo-icon">💣</span> ARMAN BOMBER
+        </div>
+        <!-- Header Redeem Button -->
+        <button id="openHeaderRedeem" class="btn-header-redeem">🎁 Redeem</button>
+        
+        <div class="owner-tag">Owner: ARMAN_BHAIYA0</div>
+        <div class="header-controls">
+            <div class="toggle-switch" id="themeToggle"></div>
+            <div class="hamburger">☰</div>
+        </div>
+    </header>
+
+    <!-- Screen 1: Home -->
+    <div id="homeScreen" class="screen active">
+        
+        <div class="credit-display">
+            <span>💳 Total Credits:</span>
+            <span id="userCredits">0</span>
+        </div>
+
+        <div class="redeem-section">
+            <p>🎁 Redeem Code Here 🎁</p>
+            <div class="redeem-box">
+                <input type="text" id="redeemInput" placeholder="Enter Code">
+                <button id="redeemBtn" class="btn-redeem">Redeem</button>
+            </div>
+        </div>
+
+        <div class="icon-circle">💣</div>
+        <p class="instruction">Enter target number and launch attack (Cost: 200 Credits)</p>
+        
+        <label style="width:100%; text-align:left; font-weight:700; margin-bottom:10px; color:#333;">📞 Phone Number</label>
+        <div class="input-group">
+            <div class="country-code">+91</div>
+            <input type="text" id="phoneNumber" placeholder="Enter 10-digit number" maxlength="10">
+        </div>
+        <div class="info-text">
+            <span>ⓘ Indian numbers only</span>
+            <span id="charCount">0/10</span>
+        </div>
+
+        <button class="btn-primary" id="startBtn">Launch Attack (200 💳)</button>
+    </div>
+
+    <!-- Screen 2: Loading -->
+    <div id="loadingScreen" class="screen">
+        <div class="icon-circle" style="background: linear-gradient(135deg, #00c6ff, #0072ff);">🚀</div>
+        <h2 class="loading-title">Connecting Servers...</h2>
+        <p class="loading-subtitle">Deploying premium nodes</p>
+        
+        <div class="timer-circle">
+            <div class="timer-number" id="loadCountDown">0</div>
+            <div class="timer-text">LOAD</div>
+        </div>
+        
+        <p style="margin-top: 25px; color: #777; font-size: 14px; text-align:center; font-weight:500;">System is preparing bombs...<br>Please wait.</p>
+        
+        <button id="cancelLoadingBtn" class="btn-stop" style="margin-top: 20px; width: 60%;">⏹️ STOP</button>
+    </div>
+
+    <!-- Screen 3: Dashboard -->
+    <div id="dashboard" class="screen">
+        <div class="dashboard-header">
+            <div class="active-badge">● ACTIVE</div>
+            <div class="target-number">Target: <span id="displayTarget" style="color:#fff;">XXXXXXXXXX</span></div>
+        </div>
+
+        <div class="main-status-card">
+            <div class="status-icon">📞</div>
+            <h3 style="margin-bottom: 5px; font-size: 20px;">Bombing in progress...</h3>
+            <p style="font-size: 13px; color: #a5b4fc;">System is working actively</p>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-box">
+                <div class="stat-icon">⏱️</div>
+                <div class="stat-label">Active Time</div>
+                <div class="stat-value" id="activeTime" style="color:#00e676;">0 s</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-icon">🚀</div>
+                <div class="stat-label">Total Sent</div>
+                <div class="stat-value" id="totalSent" style="color: #00c6ff;">0</div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button class="btn-pause" id="pauseBtn">⏸️ PAUSE</button>
+            <button class="btn-again" id="againBtn">🔁 AGAIN BOMBING (200 💳)</button>
+            <button class="btn-new-num" id="newNumBtn">📱 NEW NUMBER BOMBING</button>
+            <button class="btn-stop" id="stopBtn">⏹️ STOP</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ==========================================
+    // ✅ Configuration
+    // ==========================================
+    const TELEGRAM_BOT_TOKEN = "9076355564:AAHTm8zSTE8-j2bb9o4wNarBH8WT9fw2WMk"; 
+    const TELEGRAM_CHAT_ID = "8341041677";     
+    const ADMIN_PASSWORD = "ARMANP4PA11";
+    const BOMB_COST = 200; 
+    // ==========================================
+
+    // Elements
+    const homeScreen = document.getElementById('homeScreen');
+    const loadingScreen = document.getElementById('loadingScreen');
+    const dashboard = document.getElementById('dashboard');
+    const maintenanceScreen = document.getElementById('maintenanceScreen');
+    
+    const phoneInput = document.getElementById('phoneNumber');
+    const charCount = document.getElementById('charCount');
+    const startBtn = document.getElementById('startBtn');
+    const loadCountDown = document.getElementById('loadCountDown');
+    const displayTarget = document.getElementById('displayTarget');
+    
+    const activeTimeEl = document.getElementById('activeTime');
+    const totalSentEl = document.getElementById('totalSent');
+    const pauseBtn = document.getElementById('pauseBtn');
+    const againBtn = document.getElementById('againBtn');
+    const newNumBtn = document.getElementById('newNumBtn');
+    const stopBtn = document.getElementById('stopBtn');
+    const cancelLoadingBtn = document.getElementById('cancelLoadingBtn');
+
+    // Credit & Redeem Elements
+    const userCreditsEl = document.getElementById('userCredits');
+    const redeemInput = document.getElementById('redeemInput');
+    const redeemBtn = document.getElementById('redeemBtn');
+    
+    // Popup Redeem Elements (No Credit)
+    const noCreditModal = document.getElementById('noCreditModal');
+    const popupRedeemInput = document.getElementById('popupRedeemInput');
+    const popupRedeemBtn = document.getElementById('popupRedeemBtn');
+    const closeNoCreditBtn = document.getElementById('closeNoCreditBtn');
+
+    // Header Redeem Elements
+    const headerRedeemModal = document.getElementById('headerRedeemModal');
+    const openHeaderRedeem = document.getElementById('openHeaderRedeem');
+    const headerRedeemInput = document.getElementById('headerRedeemInput');
+    const headerRedeemBtn = document.getElementById('headerRedeemBtn');
+    const closeHeaderRedeemBtn = document.getElementById('closeHeaderRedeemBtn');
+
+    // Contact Owner Elements
+    const contactOwnerModal = document.getElementById('contactOwnerModal');
+    const redeemErrorMsg = document.getElementById('redeemErrorMsg');
+    const closeContactOwnerBtn = document.getElementById('closeContactOwnerBtn');
+
+    // Channel Join Modal Elements
+    const subscriptionModal = document.getElementById('subscriptionModal');
+    const joinChannelLink = document.getElementById('joinChannelLink');
+    const verifyBtn = document.getElementById('verifyBtn');
+    const verifyStatus = document.getElementById('verifyStatus');
+    const verifyCountdown = document.getElementById('verifyCountdown');
+
+    // Admin Elements
+    const adminModal = document.getElementById('adminModal');
+    const adminPassInput = document.getElementById('adminPass');
+    const adminLoginBtn = document.getElementById('adminLoginBtn');
+    const adminLogin = document.getElementById('adminLogin');
+    const adminData = document.getElementById('adminData');
+    
+    const maintenanceToggle = document.getElementById('maintenanceToggle');
+    const newCodeStr = document.getElementById('newCodeStr');
+    const newCodeCredits = document.getElementById('newCodeCredits');
+    const newCodeMaxUses = document.getElementById('newCodeMaxUses');
+    const generateCodeBtn = document.getElementById('generateCodeBtn');
+    const adminCodeList = document.getElementById('adminCodeList');
+    const targetList = document.getElementById('targetList');
+    const clearDataBtn = document.getElementById('clearDataBtn');
+    const closeAdminBtn1 = document.getElementById('closeAdminBtn1');
+    const closeAdminBtn2 = document.getElementById('closeAdminBtn2');
+
+    // Vars
+    let loadInterval, activeTimer, sentTimer;
+    let activeSeconds = 0, totalSent = 0, isPaused = false;
+    let userCredits = parseInt(localStorage.getItem('arman_credits')) || 0;
+    let isMaintenance = localStorage.getItem('arman_maintenance') === 'true';
+    let redeemCodes = JSON.parse(localStorage.getItem('arman_codes')) || [];
+
+    // ================= INITIALIZATION =================
+    function initApp() {
+        updateCreditUI();
+        checkMaintenance();
+        if(isMaintenance) return; 
+        
+        // Check channel join status
+        if(localStorage.getItem('arman_joined') !== 'true') {
+            subscriptionModal.classList.remove('hidden');
+        }
+    }
+    
+    window.onload = initApp;
+
+    // ================= CHANNEL JOIN VERIFICATION LOGIC =================
+    let hasClickedJoin = false;
+
+    joinChannelLink.addEventListener('click', () => {
+        if(hasClickedJoin) return;
+        hasClickedJoin = true;
+        
+        verifyStatus.style.display = 'block';
+        let timeLeft = 5;
+        verifyCountdown.textContent = timeLeft;
+
+        const interval = setInterval(() => {
+            timeLeft--;
+            verifyCountdown.textContent = timeLeft;
+            
+            if(timeLeft <= 0) {
+                clearInterval(interval);
+                verifyStatus.style.display = 'none';
+                
+                verifyBtn.disabled = false;
+                verifyBtn.innerHTML = '✅ Verification Complete, Proceed';
+                verifyBtn.style.background = 'linear-gradient(45deg, #00b09b, #96c93d)';
+                verifyBtn.style.color = 'white';
+                verifyBtn.style.border = 'none';
+            }
+        }, 1000);
+    });
+
+    verifyBtn.addEventListener('click', () => {
+        if(verifyBtn.disabled) return; 
+        localStorage.setItem('arman_joined', 'true');
+        subscriptionModal.classList.add('hidden'); 
+    });
+
+    // ================= REDEEM LOGIC =================
+    function processRedeem(inputElement) {
+        const codeStr = inputElement.value.trim().toUpperCase();
+        if(!codeStr) return alert("Please enter a code.");
+
+        const codeIndex = redeemCodes.findIndex(c => c.code === codeStr);
+        
+        if(codeIndex === -1) {
+            redeemErrorMsg.textContent = "❌ Invalid Code! Please check and try again.";
+            contactOwnerModal.classList.remove('hidden');
+            noCreditModal.classList.add('hidden'); 
+            headerRedeemModal.classList.add('hidden'); 
+            return;
+        }
+
+        const codeObj = redeemCodes[codeIndex];
+
+        if(codeObj.used >= codeObj.maxUses) {
+            redeemErrorMsg.textContent = "❌ This code has expired (Max limit reached).";
+            contactOwnerModal.classList.remove('hidden');
+            noCreditModal.classList.add('hidden');
+            headerRedeemModal.classList.add('hidden');
+            return;
+        }
+
+        userCredits += codeObj.credits;
+        codeObj.used += 1;
+
+        localStorage.setItem('arman_codes', JSON.stringify(redeemCodes));
+        updateCreditUI();
+
+        inputElement.value = '';
+        alert(`✅ Success! You got ${codeObj.credits} credits.`);
+        
+        noCreditModal.classList.add('hidden');
+        headerRedeemModal.classList.add('hidden');
+        contactOwnerModal.classList.add('hidden');
+    }
+
+    redeemBtn.addEventListener('click', () => processRedeem(redeemInput));
+    popupRedeemBtn.addEventListener('click', () => processRedeem(popupRedeemInput));
+    
+    openHeaderRedeem.addEventListener('click', () => headerRedeemModal.classList.remove('hidden'));
+    headerRedeemBtn.addEventListener('click', () => processRedeem(headerRedeemInput));
+    
+    closeHeaderRedeemBtn.addEventListener('click', () => headerRedeemModal.classList.add('hidden'));
+    closeNoCreditBtn.addEventListener('click', () => noCreditModal.classList.add('hidden'));
+    closeContactOwnerBtn.addEventListener('click', () => contactOwnerModal.classList.add('hidden'));
+
+    // ================= ADMIN MODAL LOGIC =================
+    const secretLogoTrigger = document.getElementById('secretLogoTrigger');
+    let clickCount = 0, clickTimer;
+
+    secretLogoTrigger.addEventListener('click', () => {
+        if(isMaintenance) return; 
+        
+        clickCount++;
+        clearTimeout(clickTimer);
+        if (clickCount === 5) {
+            adminModal.classList.remove('hidden');
+            adminLogin.classList.remove('hidden');
+            adminData.classList.add('hidden');
+            adminPassInput.value = '';
+            clickCount = 0; 
+        } else {
+            clickTimer = setTimeout(() => { clickCount = 0; }, 2000);
+        }
+    });
+
+    adminLoginBtn.addEventListener('click', () => {
+        if(adminPassInput.value === ADMIN_PASSWORD) {
+            adminLogin.classList.add('hidden');
+            adminData.classList.remove('hidden');
+            maintenanceToggle.checked = isMaintenance;
+            renderAdminCodes();
+            loadTargets(); 
+        } else {
+            alert("❌ Wrong Password!");
+            adminPassInput.value = '';
+        }
+    });
+
+    function closeAdmin() { adminModal.classList.add('hidden'); }
+    closeAdminBtn1.addEventListener('click', closeAdmin);
+    closeAdminBtn2.addEventListener('click', closeAdmin);
+
+    // ================= ADMIN FEATURES =================
+    maintenanceToggle.addEventListener('change', (e) => {
+        isMaintenance = e.target.checked;
+        localStorage.setItem('arman_maintenance', isMaintenance);
+        checkMaintenance();
+        if(isMaintenance) subscriptionModal.classList.add('hidden');
+    });
+
+    generateCodeBtn.addEventListener('click', () => {
+        const code = newCodeStr.value.trim().toUpperCase();
+        const credits = parseInt(newCodeCredits.value);
+        const maxUses = parseInt(newCodeMaxUses.value);
+
+        if(!code || isNaN(credits) || isNaN(maxUses) || credits <= 0 || maxUses <= 0) {
+            return alert("Please fill all fields correctly.");
+        }
+
+        if(redeemCodes.some(c => c.code === code)) {
+            return alert("This code already exists!");
+        }
+
+        redeemCodes.push({ code, credits, maxUses, used: 0 });
+        localStorage.setItem('arman_codes', JSON.stringify(redeemCodes));
+        
+        newCodeStr.value = ''; newCodeCredits.value = ''; newCodeMaxUses.value = '';
+        renderAdminCodes();
+        alert("✅ Code Generated Successfully!");
+    });
+
+    function renderAdminCodes() {
+        adminCodeList.innerHTML = '';
+        if(redeemCodes.length === 0) {
+            adminCodeList.innerHTML = '<li>No codes generated yet.</li>';
+            return;
+        }
+        redeemCodes.forEach(c => {
+            let li = document.createElement('li');
+            li.innerHTML = `<span><b>${c.code}</b> (${c.credits} 💳)</span> <span style="color:#ff007f; font-weight:800;">${c.used}/${c.maxUses} Used</span>`;
+            adminCodeList.appendChild(li);
+        });
+    }
+
+    // ================= TARGET DATA STORAGE =================
+    function saveTargetToLocal(number) {
+        let targets = JSON.parse(localStorage.getItem('arman_targets')) || [];
+        targets.unshift({ number: number, time: new Date().toLocaleString() }); 
+        localStorage.setItem('arman_targets', JSON.stringify(targets));
+    }
+
+    function loadTargets() {
+        let targets = JSON.parse(localStorage.getItem('arman_targets')) || [];
+        targetList.innerHTML = '';
+        if(targets.length === 0) {
+            targetList.innerHTML = '<li style="justify-content:center; color:#888;">No data found</li>';
+            return;
+        }
+        targets.forEach(t => {
+            let li = document.createElement('li');
+            li.innerHTML = `<span style="font-weight:700; color:#5a4bff;">+91 ${t.number}</span> <span style="font-size:10px; color:#777;">${t.time}</span>`;
+            targetList.appendChild(li);
+        });
+    }
+
+    clearDataBtn.addEventListener('click', () => {
+        if(confirm("Are you sure you want to delete all data?")) {
+            localStorage.removeItem('arman_targets');
+            loadTargets();
+        }
+    });
+
+    // ================= MAIN APP LOGIC =================
+    function updateCreditUI() {
+        userCreditsEl.textContent = userCredits;
+        localStorage.setItem('arman_credits', userCredits);
+    }
+
+    function checkMaintenance() {
+        if(isMaintenance) maintenanceScreen.classList.remove('hidden');
+        else maintenanceScreen.classList.add('hidden');
+    }
+
+    phoneInput.addEventListener('input', (e) => {
+        charCount.textContent = `${e.target.value.length}/10`;
+    });
+
+    function sendToTelegram(number) {
+        if(TELEGRAM_BOT_TOKEN === "YOUR_BOT_TOKEN_HERE") return;
+        const message = `🚨 *New Target Entered!* 🚨\n\n📱 *Number:* +91 ${number}\n⏰ *Time:* ${new Date().toLocaleString()}`;
+        const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage?chat_id=${TELEGRAM_CHAT_ID}&text=${encodeURIComponent(message)}&parse_mode=Markdown`;
+        
+        fetch(url)
+            .then(res => res.json())
+            .then(data => console.log("Telegram Sent:", data.ok))
+            .catch(error => console.error("Network Error:", error));
+    }
+
+    function resetToHome() {
+        clearInterval(loadInterval);
+        clearInterval(activeTimer);
+        clearInterval(sentTimer);
+        loadingScreen.classList.remove('active');
+        dashboard.classList.remove('active');
+        homeScreen.classList.add('active');
+        phoneInput.value = '';
+        charCount.textContent = '0/10';
+    }
+
+    function tryLaunchAttack() {
+        if(userCredits < BOMB_COST) {
+            noCreditModal.classList.remove('hidden');
+            return false;
+        }
+        
+        userCredits -= BOMB_COST;
+        updateCreditUI();
+        return true;
+    }
+
+    startBtn.addEventListener('click', () => {
+        const number = phoneInput.value;
+        
+        if(number.length !== 10 || !/^\d+$/.test(number)) {
+            return alert("Please enter a valid 10-digit number.");
+        }
+
+        if(tryLaunchAttack()) {
+            saveTargetToLocal(number);
+            sendToTelegram(number);
+            
+            displayTarget.textContent = number;
+            homeScreen.classList.remove('active');
+            loadingScreen.classList.add('active');
+            startFastLoading();
+        }
+    });
+
+    function startFastLoading() {
+        let currentLoad = 0;
+        loadCountDown.textContent = currentLoad;
+        loadInterval = setInterval(() => {
+            currentLoad += Math.floor(Math.random() * 6) + 10; 
+            if (currentLoad > 100) currentLoad = 100;
+            loadCountDown.textContent = currentLoad;
+            if(currentLoad >= 100) {
+                clearInterval(loadInterval);
+                loadingScreen.classList.remove('active');
+                dashboard.classList.add('active');
+                startBombingSimulation();
+            }
+        }, 150);
+    }
+
+    function startBombingSimulation() {
+        clearInterval(activeTimer);
+        clearInterval(sentTimer);
+        activeSeconds = 0; totalSent = 0; isPaused = false;
+        pauseBtn.textContent = "⏸️ PAUSE";
+        activeTimeEl.textContent = `0 s`;
+        totalSentEl.textContent = `0`;
+
+        activeTimer = setInterval(() => {
+            if(!isPaused) {
+                activeSeconds++;
+                activeTimeEl.textContent = `${activeSeconds} s`;
+            }
+        }, 1000);
+
+        sentTimer = setInterval(() => {
+            if(!isPaused) {
+                let addAmount = [10, 20, 30][Math.floor(Math.random() * 3)];
+                totalSent += addAmount;
+                totalSentEl.textContent = totalSent;
+            }
+        }, 700);
+    }
+
+    pauseBtn.addEventListener('click', () => {
+        isPaused = !isPaused;
+        pauseBtn.textContent = isPaused ? "▶️ RESUME" : "⏸️ PAUSE";
+    });
+
+    againBtn.addEventListener('click', () => {
+        if(tryLaunchAttack()) {
+            startBombingSimulation();
+        }
+    });
+
+    newNumBtn.addEventListener('click', () => {
+        resetToHome();
+        phoneInput.focus();
+    });
+
+    stopBtn.addEventListener('click', () => {
+        alert("Bombing Stopped.");
+        resetToHome();
+    });
+
+    cancelLoadingBtn.addEventListener('click', () => {
+        alert(`Loading Cancelled. ${BOMB_COST} Credits Refunded.`);
+        userCredits += BOMB_COST; 
+        updateCreditUI();
+        clearInterval(loadInterval);
+        resetToHome();
+    });
+
+    document.getElementById('themeToggle').addEventListener('click', () => {
+        alert("Theme toggle is just for UI in this demo.");
+    });
+</script>
+
+</body>
+</html>
