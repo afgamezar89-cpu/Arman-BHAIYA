@@ -12,7 +12,7 @@
             padding: 0;
             box-sizing: border-box;
             font-family: 'Poppins', sans-serif;
-            word-wrap: break-word; /* Fixes text overflow */
+            word-wrap: break-word;
         }
 
         body {
@@ -151,11 +151,10 @@
             text-transform: uppercase;
         }
 
-        /* NEW STACKED REDEEM BOX (Vertical Layout) */
         .stacked-redeem-box {
             width: 100%;
             display: flex;
-            flex-direction: column; /* This makes them stack vertically */
+            flex-direction: column;
             gap: 10px;
         }
 
@@ -342,6 +341,11 @@
         <h1 style="font-size: 40px; margin-bottom: 10px;">🚧</h1>
         <h2 style="font-size: 24px; font-weight: 800; color: #ff007f;">Under Maintenance</h2>
         <p style="color: #a5b4fc; margin-top: 10px; font-weight: 500;">Our website is currently under maintenance.<br>Please try again later.</p>
+        
+        <!-- OWNER LOGIN BUTTON ON MAINTENANCE SCREEN -->
+        <button id="ownerMaintLogin" style="margin-top: 40px; background: rgba(255,255,255,0.1); border: 2px solid #5a4bff; color: #a5b4fc; padding: 10px 20px; border-radius: 12px; font-size: 14px; cursor: pointer; font-weight: 700; transition: 0.3s;">
+            🔐 Owner Login
+        </button>
     </div>
 </div>
 
@@ -365,7 +369,7 @@
     </div>
 </div>
 
-<!-- HEADER REDEEM MODAL (Stacked Layout) -->
+<!-- HEADER REDEEM MODAL -->
 <div id="headerRedeemModal" class="sub-modal hidden">
     <div class="sub-modal-content" style="border: 2px solid #5a4bff;">
         <h2 style="color: #5a4bff;">🎁 Redeem Credits 🎁</h2>
@@ -380,7 +384,7 @@
     </div>
 </div>
 
-<!-- NO CREDIT MODAL (Stacked Layout - Close upar Claim) -->
+<!-- NO CREDIT MODAL -->
 <div id="noCreditModal" class="sub-modal hidden">
     <div class="sub-modal-content" style="border: 2px solid #ff007f;">
         <h2 style="font-size: 28px;">❌ No Credits!</h2>
@@ -437,14 +441,14 @@
                 </div>
             </div>
 
+            <!-- UPDATED: Universal Code Generator -->
             <div class="admin-section">
-                <h3>🎁 Generate Redeem Code</h3>
-                <input type="text" id="newCodeStr" placeholder="Code (e.g. ARMAN500)">
-                <input type="number" id="newCodeCredits" placeholder="Credits (e.g. 500)">
-                <input type="number" id="newCodeMaxUses" placeholder="Max Users (e.g. 5)">
+                <h3>🎁 Generate Universal Code</h3>
+                <input type="number" id="newCodeCredits" placeholder="Enter Credits (e.g. 500)">
                 <button id="generateCodeBtn" class="admin-btn">Generate Code</button>
+                <p style="font-size:11px; color:#666; margin-top:10px; text-align:center;">This code will work on ANY user's device.</p>
                 
-                <h3 style="margin-top:15px;">📋 Active Codes</h3>
+                <h3 style="margin-top:15px;">📋 Generated History</h3>
                 <ul id="adminCodeList"></ul>
             </div>
 
@@ -482,7 +486,6 @@
             <span id="userCredits">0</span>
         </div>
 
-        <!-- Home Screen Redeem Section (Stacked Layout) -->
         <div class="redeem-section">
             <p>🎁 Redeem Code Here 🎁</p>
             <div class="stacked-redeem-box">
@@ -626,9 +629,7 @@
     const adminData = document.getElementById('adminData');
     
     const maintenanceToggle = document.getElementById('maintenanceToggle');
-    const newCodeStr = document.getElementById('newCodeStr');
     const newCodeCredits = document.getElementById('newCodeCredits');
-    const newCodeMaxUses = document.getElementById('newCodeMaxUses');
     const generateCodeBtn = document.getElementById('generateCodeBtn');
     const adminCodeList = document.getElementById('adminCodeList');
     const targetList = document.getElementById('targetList');
@@ -690,43 +691,52 @@
         subscriptionModal.classList.add('hidden'); 
     });
 
-    // ================= REDEEM LOGIC =================
+    // ================= UNIVERSAL REDEEM LOGIC =================
     function processRedeem(inputElement) {
         const codeStr = inputElement.value.trim().toUpperCase();
         if(!codeStr) return alert("Please enter a code.");
 
+        // नया यूनिवर्सल लॉजिक: कोड "ARMAN-500" फॉर्मेट में होना चाहिए
+        if (codeStr.startsWith("ARMAN-")) {
+            let parts = codeStr.split("-");
+            let creditsAmount = parseInt(parts[1]);
+            
+            if (!isNaN(creditsAmount) && creditsAmount > 0) {
+                userCredits += creditsAmount;
+                updateCreditUI();
+                inputElement.value = '';
+                alert(`✅ Success! You got ${creditsAmount} credits.`);
+                
+                noCreditModal.classList.add('hidden');
+                headerRedeemModal.classList.add('hidden');
+                contactOwnerModal.classList.add('hidden');
+                return;
+            }
+        }
+        
+        // अगर पुराना कोड है (लोकल स्टोरेज में)
         const codeIndex = redeemCodes.findIndex(c => c.code === codeStr);
-        
-        if(codeIndex === -1) {
-            redeemErrorMsg.textContent = "❌ Invalid Code! Please check and try again.";
-            contactOwnerModal.classList.remove('hidden');
-            noCreditModal.classList.add('hidden'); 
-            headerRedeemModal.classList.add('hidden'); 
-            return;
+        if(codeIndex !== -1) {
+            const codeObj = redeemCodes[codeIndex];
+            if(codeObj.used < codeObj.maxUses) {
+                userCredits += codeObj.credits;
+                codeObj.used += 1;
+                localStorage.setItem('arman_codes', JSON.stringify(redeemCodes));
+                updateCreditUI();
+                inputElement.value = '';
+                alert(`✅ Success! You got ${codeObj.credits} credits.`);
+                noCreditModal.classList.add('hidden');
+                headerRedeemModal.classList.add('hidden');
+                contactOwnerModal.classList.add('hidden');
+                return;
+            }
         }
 
-        const codeObj = redeemCodes[codeIndex];
-
-        if(codeObj.used >= codeObj.maxUses) {
-            redeemErrorMsg.textContent = "❌ This code has expired (Max limit reached).";
-            contactOwnerModal.classList.remove('hidden');
-            noCreditModal.classList.add('hidden');
-            headerRedeemModal.classList.add('hidden');
-            return;
-        }
-
-        userCredits += codeObj.credits;
-        codeObj.used += 1;
-
-        localStorage.setItem('arman_codes', JSON.stringify(redeemCodes));
-        updateCreditUI();
-
-        inputElement.value = '';
-        alert(`✅ Success! You got ${codeObj.credits} credits.`);
-        
-        noCreditModal.classList.add('hidden');
-        headerRedeemModal.classList.add('hidden');
-        contactOwnerModal.classList.add('hidden');
+        // अगर कोड गलत है
+        redeemErrorMsg.textContent = "❌ Invalid Code! Please check and try again.";
+        contactOwnerModal.classList.remove('hidden');
+        noCreditModal.classList.add('hidden'); 
+        headerRedeemModal.classList.add('hidden'); 
     }
 
     redeemBtn.addEventListener('click', () => processRedeem(redeemInput));
@@ -741,23 +751,36 @@
 
     // ================= ADMIN MODAL LOGIC =================
     const secretLogoTrigger = document.getElementById('secretLogoTrigger');
+    const ownerMaintLogin = document.getElementById('ownerMaintLogin');
+    
     let clickCount = 0, clickTimer;
 
-    secretLogoTrigger.addEventListener('click', () => {
-        if(isMaintenance) return; 
-        
+    function handleSecretClick() {
         clickCount++;
         clearTimeout(clickTimer);
         if (clickCount === 5) {
-            adminModal.classList.remove('hidden');
-            adminLogin.classList.remove('hidden');
-            adminData.classList.add('hidden');
-            adminPassInput.value = '';
+            openAdminPanel();
             clickCount = 0; 
         } else {
             clickTimer = setTimeout(() => { clickCount = 0; }, 2000);
         }
+    }
+
+    function openAdminPanel() {
+        adminModal.classList.remove('hidden');
+        adminLogin.classList.remove('hidden');
+        adminData.classList.add('hidden');
+        adminPassInput.value = '';
+    }
+
+    // Logo click to open admin
+    secretLogoTrigger.addEventListener('click', () => {
+        if(isMaintenance) return; 
+        handleSecretClick();
     });
+
+    // Maintenance screen Owner Login button
+    ownerMaintLogin.addEventListener('click', openAdminPanel);
 
     adminLoginBtn.addEventListener('click', () => {
         if(adminPassInput.value === ADMIN_PASSWORD) {
@@ -781,28 +804,31 @@
         isMaintenance = e.target.checked;
         localStorage.setItem('arman_maintenance', isMaintenance);
         checkMaintenance();
-        if(isMaintenance) subscriptionModal.classList.add('hidden');
+        if(isMaintenance) {
+            subscriptionModal.classList.add('hidden');
+            adminModal.classList.add('hidden'); 
+        }
     });
 
+    // UNIVERSAL CODE GENERATION
     generateCodeBtn.addEventListener('click', () => {
-        const code = newCodeStr.value.trim().toUpperCase();
         const credits = parseInt(newCodeCredits.value);
-        const maxUses = parseInt(newCodeMaxUses.value);
-
-        if(!code || isNaN(credits) || isNaN(maxUses) || credits <= 0 || maxUses <= 0) {
-            return alert("Please fill all fields correctly.");
+        
+        if(!credits || credits <= 0) {
+            return alert("Please enter valid Credits.");
         }
 
-        if(redeemCodes.some(c => c.code === code)) {
-            return alert("This code already exists!");
-        }
-
-        redeemCodes.push({ code, credits, maxUses, used: 0 });
+        // Generate Code (e.g. ARMAN-500)
+        const code = `ARMAN-${credits}`;
+        
+        // Save to history
+        redeemCodes.push({ code: code, credits: credits, maxUses: 9999, used: 0 });
         localStorage.setItem('arman_codes', JSON.stringify(redeemCodes));
         
-        newCodeStr.value = ''; newCodeCredits.value = ''; newCodeMaxUses.value = '';
+        alert(`✅ Code Generated: ${code}\n\nYou can give this code to ANY user on ANY device.\nThey will get ${credits} credits.`);
+        
+        newCodeCredits.value = ''; 
         renderAdminCodes();
-        alert("✅ Code Generated Successfully!");
     });
 
     function renderAdminCodes() {
@@ -813,7 +839,7 @@
         }
         redeemCodes.forEach(c => {
             let li = document.createElement('li');
-            li.innerHTML = `<span><b>${c.code}</b> (${c.credits} 💳)</span> <span style="color:#ff007f; font-weight:800;">${c.used}/${c.maxUses} Used</span>`;
+            li.innerHTML = `<span><b>${c.code}</b> (${c.credits} 💳)</span>`;
             adminCodeList.appendChild(li);
         });
     }
@@ -987,4 +1013,4 @@
 </script>
 
 </body>
-    </html>
+                </html>
