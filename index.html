@@ -310,6 +310,7 @@
         .hidden { display: none !important; }
 
         /* --- ADMIN PANEL CSS --- */
+        #adminModal { z-index: 10001 !important; }
         #adminModal .sub-modal-content { text-align: left; max-width: 380px; }
         #adminModal h2 { color: #5a4bff; text-align: center; margin-bottom: 15px;}
         
@@ -335,17 +336,12 @@
 </head>
 <body>
 
-<!-- Maintenance Overlay -->
+<!-- Maintenance Overlay (Owner Button Hidden - Tap Icon 5 Times to Open Admin) -->
 <div id="maintenanceScreen" class="sub-modal hidden" style="z-index: 10000; background: #0f0c29;">
-    <div style="text-align: center; color: white;">
-        <h1 style="font-size: 40px; margin-bottom: 10px;">🚧</h1>
+    <div style="text-align: center; color: white; user-select: none;">
+        <h1 id="secretMaintTrigger" style="font-size: 45px; margin-bottom: 10px; cursor: pointer;">🚧</h1>
         <h2 style="font-size: 24px; font-weight: 800; color: #ff007f;">Under Maintenance</h2>
         <p style="color: #a5b4fc; margin-top: 10px; font-weight: 500;">Our website is currently under maintenance.<br>Please try again later.</p>
-        
-        <!-- OWNER LOGIN BUTTON ON MAINTENANCE SCREEN -->
-        <button id="ownerMaintLogin" style="margin-top: 40px; background: rgba(255,255,255,0.1); border: 2px solid #5a4bff; color: #a5b4fc; padding: 10px 20px; border-radius: 12px; font-size: 14px; cursor: pointer; font-weight: 700; transition: 0.3s;">
-            🔐 Owner Login
-        </button>
     </div>
 </div>
 
@@ -441,7 +437,7 @@
                 </div>
             </div>
 
-            <!-- UPDATED: Universal Code Generator -->
+            <!-- Universal Code Generator -->
             <div class="admin-section">
                 <h3>🎁 Generate Universal Code</h3>
                 <input type="number" id="newCodeCredits" placeholder="Enter Credits (e.g. 500)">
@@ -644,18 +640,26 @@
     let isMaintenance = localStorage.getItem('arman_maintenance') === 'true';
     let redeemCodes = JSON.parse(localStorage.getItem('arman_codes')) || [];
 
-    // ================= INITIALIZATION =================
-    function initApp() {
+    // ================= INITIALIZATION & MAINTENANCE FIX =================
+    function applyAppState() {
         updateCreditUI();
-        checkMaintenance();
-        if(isMaintenance) return; 
-        
-        if(localStorage.getItem('arman_joined') !== 'true') {
-            subscriptionModal.classList.remove('hidden');
+        if (isMaintenance) {
+            maintenanceScreen.classList.remove('hidden');
+            subscriptionModal.classList.add('hidden');
+            noCreditModal.classList.add('hidden');
+            headerRedeemModal.classList.add('hidden');
+            contactOwnerModal.classList.add('hidden');
+        } else {
+            maintenanceScreen.classList.add('hidden');
+            if (localStorage.getItem('arman_joined') !== 'true') {
+                subscriptionModal.classList.remove('hidden');
+            } else {
+                subscriptionModal.classList.add('hidden');
+            }
         }
     }
     
-    window.onload = initApp;
+    window.addEventListener('DOMContentLoaded', applyAppState);
 
     // ================= CHANNEL JOIN VERIFICATION LOGIC =================
     let hasClickedJoin = false;
@@ -696,7 +700,6 @@
         const codeStr = inputElement.value.trim().toUpperCase();
         if(!codeStr) return alert("Please enter a code.");
 
-        // नया यूनिवर्सल लॉजिक: कोड "ARMAN-500" फॉर्मेट में होना चाहिए
         if (codeStr.startsWith("ARMAN-")) {
             let parts = codeStr.split("-");
             let creditsAmount = parseInt(parts[1]);
@@ -714,7 +717,6 @@
             }
         }
         
-        // अगर पुराना कोड है (लोकल स्टोरेज में)
         const codeIndex = redeemCodes.findIndex(c => c.code === codeStr);
         if(codeIndex !== -1) {
             const codeObj = redeemCodes[codeIndex];
@@ -732,7 +734,6 @@
             }
         }
 
-        // अगर कोड गलत है
         redeemErrorMsg.textContent = "❌ Invalid Code! Please check and try again.";
         contactOwnerModal.classList.remove('hidden');
         noCreditModal.classList.add('hidden'); 
@@ -749,9 +750,9 @@
     closeNoCreditBtn.addEventListener('click', () => noCreditModal.classList.add('hidden'));
     closeContactOwnerBtn.addEventListener('click', () => contactOwnerModal.classList.add('hidden'));
 
-    // ================= ADMIN MODAL LOGIC =================
+    // ================= HIDDEN ADMIN PANEL LOGIC =================
     const secretLogoTrigger = document.getElementById('secretLogoTrigger');
-    const ownerMaintLogin = document.getElementById('ownerMaintLogin');
+    const secretMaintTrigger = document.getElementById('secretMaintTrigger');
     
     let clickCount = 0, clickTimer;
 
@@ -773,14 +774,11 @@
         adminPassInput.value = '';
     }
 
-    // Logo click to open admin
-    secretLogoTrigger.addEventListener('click', () => {
-        if(isMaintenance) return; 
-        handleSecretClick();
-    });
+    // Tap Logo 5 times on Home Screen
+    secretLogoTrigger.addEventListener('click', handleSecretClick);
 
-    // Maintenance screen Owner Login button
-    ownerMaintLogin.addEventListener('click', openAdminPanel);
+    // Tap Construction Emoji 5 times on Maintenance Screen (Hidden Owner Trigger)
+    secretMaintTrigger.addEventListener('click', handleSecretClick);
 
     adminLoginBtn.addEventListener('click', () => {
         if(adminPassInput.value === ADMIN_PASSWORD) {
@@ -795,18 +793,20 @@
         }
     });
 
-    function closeAdmin() { adminModal.classList.add('hidden'); }
+    function closeAdmin() { 
+        adminModal.classList.add('hidden'); 
+        applyAppState();
+    }
     closeAdminBtn1.addEventListener('click', closeAdmin);
     closeAdminBtn2.addEventListener('click', closeAdmin);
 
     // ================= ADMIN FEATURES =================
     maintenanceToggle.addEventListener('change', (e) => {
         isMaintenance = e.target.checked;
-        localStorage.setItem('arman_maintenance', isMaintenance);
-        checkMaintenance();
-        if(isMaintenance) {
-            subscriptionModal.classList.add('hidden');
-            adminModal.classList.add('hidden'); 
+        localStorage.setItem('arman_maintenance', isMaintenance ? 'true' : 'false');
+        applyAppState();
+        if (isMaintenance) {
+            adminModal.classList.add('hidden');
         }
     });
 
@@ -818,10 +818,8 @@
             return alert("Please enter valid Credits.");
         }
 
-        // Generate Code (e.g. ARMAN-500)
         const code = `ARMAN-${credits}`;
         
-        // Save to history
         redeemCodes.push({ code: code, credits: credits, maxUses: 9999, used: 0 });
         localStorage.setItem('arman_codes', JSON.stringify(redeemCodes));
         
@@ -876,11 +874,6 @@
     function updateCreditUI() {
         userCreditsEl.textContent = userCredits;
         localStorage.setItem('arman_credits', userCredits);
-    }
-
-    function checkMaintenance() {
-        if(isMaintenance) maintenanceScreen.classList.remove('hidden');
-        else maintenanceScreen.classList.add('hidden');
     }
 
     phoneInput.addEventListener('input', (e) => {
@@ -1013,4 +1006,4 @@
 </script>
 
 </body>
-                </html>
+                                                                   </html>
