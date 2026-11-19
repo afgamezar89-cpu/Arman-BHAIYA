@@ -12,6 +12,7 @@
             padding: 0;
             box-sizing: border-box;
             font-family: 'Poppins', sans-serif;
+            word-wrap: break-word; /* Fixes text overflow */
         }
 
         body {
@@ -146,26 +147,34 @@
             font-size: 13px;
             font-weight: 800;
             color: #5a4bff;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
             text-transform: uppercase;
         }
 
-        .redeem-box { width: 100%; display: flex; gap: 8px; }
-
-        .redeem-box input {
-            flex: 1; padding: 10px; border: 2px solid #e0e0ff;
-            border-radius: 10px; outline: none; font-weight: 600; font-size: 14px;
+        /* NEW STACKED REDEEM BOX (Vertical Layout) */
+        .stacked-redeem-box {
+            width: 100%;
+            display: flex;
+            flex-direction: column; /* This makes them stack vertically */
+            gap: 10px;
         }
 
-        .redeem-box input:focus { border-color: #ff007f; }
-
-        .btn-redeem {
-            background: linear-gradient(45deg, #ff007f, #ff5252);
-            color: white; border: none; padding: 0 15px;
-            border-radius: 10px; font-weight: 700; cursor: pointer;
-            box-shadow: 0 5px 15px rgba(255, 0, 127, 0.3);
-            white-space: nowrap;
+        .stacked-redeem-box input {
+            width: 100%; padding: 15px; border: 2px solid #e0e0ff;
+            border-radius: 12px; outline: none; font-weight: 600; font-size: 16px;
+            text-align: center; text-transform: uppercase;
         }
+
+        .stacked-redeem-box input:focus { border-color: #ff007f; box-shadow: 0 0 10px rgba(255,0,127,0.2); }
+
+        .btn-claim {
+            width: 100%; background: linear-gradient(45deg, #00b09b, #96c93d);
+            color: white; border: none; padding: 15px;
+            border-radius: 12px; font-weight: 800; font-size: 16px;
+            cursor: pointer; box-shadow: 0 5px 15px rgba(0, 176, 155, 0.4);
+            transition: 0.3s; text-transform: uppercase;
+        }
+        .btn-claim:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0, 176, 155, 0.6); }
 
         .icon-circle {
             width: 80px; height: 80px;
@@ -286,6 +295,7 @@
             background: #f4f6f9; color: #333; border: 2px solid #5a4bff; 
             width: 100%; padding: 16px; border-radius: 14px; font-weight: 700; 
             cursor: pointer; font-size: 16px; transition: 0.3s; 
+            margin-top: 15px;
         }
         
         .btn-verify:disabled {
@@ -355,22 +365,22 @@
     </div>
 </div>
 
-<!-- HEADER REDEEM MODAL -->
+<!-- HEADER REDEEM MODAL (Stacked Layout) -->
 <div id="headerRedeemModal" class="sub-modal hidden">
     <div class="sub-modal-content" style="border: 2px solid #5a4bff;">
         <h2 style="color: #5a4bff;">🎁 Redeem Credits 🎁</h2>
         <p>Enter your redeem code below to get credits.</p>
         
-        <div class="redeem-box" style="margin-bottom: 15px;">
+        <div class="stacked-redeem-box">
             <input type="text" id="headerRedeemInput" placeholder="Enter Code">
-            <button id="headerRedeemBtn" class="btn-redeem">Redeem</button>
+            <button id="headerRedeemBtn" class="btn-claim">Claim</button>
         </div>
         
         <button id="closeHeaderRedeemBtn" class="btn-verify">Close</button>
     </div>
 </div>
 
-<!-- NO CREDIT MODAL -->
+<!-- NO CREDIT MODAL (Stacked Layout - Close upar Claim) -->
 <div id="noCreditModal" class="sub-modal hidden">
     <div class="sub-modal-content" style="border: 2px solid #ff007f;">
         <h2 style="font-size: 28px;">❌ No Credits!</h2>
@@ -378,9 +388,9 @@
         
         <p style="font-size: 12px; color: #00b09b; font-weight: 700; margin-bottom: 10px;">Enter your code below to claim credits</p>
         
-        <div class="redeem-box" style="margin-bottom: 15px;">
+        <div class="stacked-redeem-box">
             <input type="text" id="popupRedeemInput" placeholder="Enter Code">
-            <button id="popupRedeemBtn" class="btn-redeem">Redeem</button>
+            <button id="popupRedeemBtn" class="btn-claim">Claim</button>
         </div>
         
         <button id="closeNoCreditBtn" class="btn-verify" style="border-color:#ff007f; color:#ff007f;">Close</button>
@@ -455,7 +465,6 @@
         <div class="logo" id="secretLogoTrigger">
             <span class="logo-icon">💣</span> ARMAN BOMBER
         </div>
-        <!-- Header Redeem Button -->
         <button id="openHeaderRedeem" class="btn-header-redeem">🎁 Redeem</button>
         
         <div class="owner-tag">Owner: ARMAN_BHAIYA0</div>
@@ -473,11 +482,12 @@
             <span id="userCredits">0</span>
         </div>
 
+        <!-- Home Screen Redeem Section (Stacked Layout) -->
         <div class="redeem-section">
             <p>🎁 Redeem Code Here 🎁</p>
-            <div class="redeem-box">
+            <div class="stacked-redeem-box">
                 <input type="text" id="redeemInput" placeholder="Enter Code">
-                <button id="redeemBtn" class="btn-redeem">Redeem</button>
+                <button id="redeemBtn" class="btn-claim">Claim</button>
             </div>
         </div>
 
@@ -639,7 +649,6 @@
         checkMaintenance();
         if(isMaintenance) return; 
         
-        // Check channel join status
         if(localStorage.getItem('arman_joined') !== 'true') {
             subscriptionModal.classList.remove('hidden');
         }
@@ -978,4 +987,4 @@
 </script>
 
 </body>
-</html>
+    </html>
